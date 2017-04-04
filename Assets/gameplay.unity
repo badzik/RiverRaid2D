@@ -100,7 +100,7 @@ GameObject:
   - 4: {fileID: 126405882}
   - 61: {fileID: 126405883}
   m_Layer: 0
-  m_Name: Background (1)
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,7 +143,7 @@ GameObject:
   - 4: {fileID: 530273200}
   - 61: {fileID: 530273199}
   m_Layer: 0
-  m_Name: Background
+  m_Name: 0
   m_TagString: LevelStart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,7 +262,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 806235724}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -915,7 +915,7 @@ GameObject:
   - 4: {fileID: 1771187099}
   - 61: {fileID: 1771187100}
   m_Layer: 0
-  m_Name: Background (2)
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1035,7 +1035,7 @@ GameObject:
   - 4: {fileID: 1954181096}
   - 61: {fileID: 1954181097}
   m_Layer: 0
-  m_Name: Background (3)
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
