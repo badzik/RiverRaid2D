@@ -18,13 +18,21 @@ public class GroundLooperScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        for (int i = 0; i < currentLevel.Length; i++)
+        for (int i =0; i < currentLevel.Length; i++)
         {
             nextLevel[i] = new int[2];
             currentLevel[i] = new int[2];
             currentLevel[i][0] = 2;
             currentLevel[i][1] = 0;
         }
+        //for begining and ending of level
+        currentLevel[0][0] = 6;
+        currentLevel[0][1] = 0;
+        currentLevel[1][0] = 6;
+        currentLevel[1][1] = 0;
+        currentLevel[31][0] = 6;
+        currentLevel[31][1] = 0;
+        drawCurrentLevel();
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -78,11 +86,11 @@ public class GroundLooperScript : MonoBehaviour
         diffy = ((BoxCollider2D)collider).size.y / boxParts;
         posy = boxPosition.y - (((BoxCollider2D)collider).size.y / 2.0f) + (diffy / 2.0f);
         sizey = diffy;
-        if (boxNumber == 0)
-        {
-            start = 2;
-            posy += 2 * diffy;
-        }
+        //if (boxNumber == 0)
+        //{
+        //    start = 2;
+        //    posy += 2 * diffy;
+        //}
         for (i = start + (boxNumber * boxParts); i < boxParts + (boxParts * boxNumber); i++)
         {
             triangles.Clear();
@@ -167,7 +175,7 @@ public class GroundLooperScript : MonoBehaviour
 
                     if (currentLevel[i][1] != currentLevel[i + 1][1])
                     {
-                        if (currentLevel[i][1] > currentLevel[i + 1][1]  && currentLevel[i + 1][1]!=0)
+                        if (currentLevel[i][1] > currentLevel[i + 1][1] && currentLevel[i + 1][1] != 0)
                         {
                             tempTriangle[0] = new Vector2(posx + ((currentLevel[i + 1][1] * diffx) / 2.0f), posy + (sizey / 2.0f) + sizey);
                             tempTriangle[1] = new Vector2(posx + (sizex / 2.0f), posy + (sizey / 2.0f));
@@ -204,7 +212,7 @@ public class GroundLooperScript : MonoBehaviour
                 tr1.tag = "Terrain";
                 MeshFilter trFilter = tr1.AddComponent<MeshFilter>();
                 MeshRenderer trRenderer = tr1.AddComponent<MeshRenderer>();
-                trRenderer.material = Resources.Load("Sprites/Grass", typeof(Material)) as Material;
+                trRenderer.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
                 Mesh trMesh = tr1.GetComponent<MeshFilter>().mesh;
                 trMesh.vertices = new Vector3[3] { new Vector3(t[0].x, t[0].y), new Vector3(t[1].x, t[1].y), new Vector3(t[2].x, t[2].y) };
                 trMesh.uv = new Vector2[3] { t[0], t[1], t[2] };
@@ -225,12 +233,21 @@ public class GroundLooperScript : MonoBehaviour
     private void generateTerrain()
     {
         //TODO
-        for (int i = 0; i < currentLevel.Length; i++)
+        for (int i = 2; i < currentLevel.Length-1; i++)
         {
             nextLevel[i][0] = 2;
             if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 4);
             //nextLevel[i][1] = 0;
         }
+        //begining of level
+        currentLevel[0][0] = 6;
+        currentLevel[0][1] = 0;
+        currentLevel[1][0] = 6;
+        currentLevel[1][1] = 0;
+
+        //ending of level
+        currentLevel[31][0] = 6;
+        currentLevel[31][1] = 0;
     }
 
     private void drawGrass(float posx, float posy, float sizex, float sizey)
@@ -238,11 +255,25 @@ public class GroundLooperScript : MonoBehaviour
         GameObject grass = new GameObject();
         grass.tag = "Terrain";
         SpriteRenderer r3 = grass.AddComponent<SpriteRenderer>();
-        r3.sprite = Resources.Load("Sprites/Square", typeof(Sprite)) as Sprite;
-        r3.material = Resources.Load("Sprites/Grass", typeof(Material)) as Material;
+        r3.sprite = Resources.Load("Shapes/Square", typeof(Sprite)) as Sprite;
+        r3.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
         BoxCollider2D c3 = grass.AddComponent<BoxCollider2D>();
         grass.transform.position = new Vector2(posx, posy);
         grass.transform.localScale = new Vector3(sizex, sizey);
+    }
+
+    private void drawCurrentLevel()
+    {
+        int size = 4;
+        GameObject[] parts = new GameObject[size];
+        for(int i = 0; i < size; i++)
+        {
+            parts[i] = GameObject.Find(i.ToString());
+        }
+        foreach(GameObject obj in parts)
+        {
+            draw(obj.GetComponent<Collider2D>());
+        }
     }
 
 }
