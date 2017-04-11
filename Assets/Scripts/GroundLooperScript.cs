@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using UnityEditor;
 using System.Collections.Generic;
 
 public class GroundLooperScript : MonoBehaviour
@@ -39,7 +38,7 @@ public class GroundLooperScript : MonoBehaviour
     {
         if (collider.tag != "Terrain")
         {
-            if (collider.tag != "Finish")
+            if (collider.tag != "Finish" && collider.tag!="Missile")
             {
                 float heightofBGObject = ((BoxCollider2D)collider).size.y;
                 Vector3 pos = collider.transform.position;
@@ -212,12 +211,14 @@ public class GroundLooperScript : MonoBehaviour
                 tr1.tag = "Terrain";
                 MeshFilter trFilter = tr1.AddComponent<MeshFilter>();
                 MeshRenderer trRenderer = tr1.AddComponent<MeshRenderer>();
+                trRenderer.sortingLayerName = "Background";
                 trRenderer.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
                 Mesh trMesh = tr1.GetComponent<MeshFilter>().mesh;
                 trMesh.vertices = new Vector3[3] { new Vector3(t[0].x, t[0].y), new Vector3(t[1].x, t[1].y), new Vector3(t[2].x, t[2].y) };
                 trMesh.uv = new Vector2[3] { t[0], t[1], t[2] };
                 trMesh.triangles = new int[] { 0, 1, 2 };
                 PolygonCollider2D pc = tr1.AddComponent<PolygonCollider2D>();
+                pc.isTrigger = true;
                 pc.points = new Vector2[3] { t[0], t[1], t[2] };
             }
 
@@ -255,9 +256,11 @@ public class GroundLooperScript : MonoBehaviour
         GameObject grass = new GameObject();
         grass.tag = "Terrain";
         SpriteRenderer r3 = grass.AddComponent<SpriteRenderer>();
+        r3.sortingLayerName = "Background";
         r3.sprite = Resources.Load("Shapes/Square", typeof(Sprite)) as Sprite;
         r3.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
         BoxCollider2D c3 = grass.AddComponent<BoxCollider2D>();
+        c3.isTrigger = true;
         grass.transform.position = new Vector2(posx, posy);
         grass.transform.localScale = new Vector3(sizex, sizey);
     }
