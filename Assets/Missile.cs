@@ -19,6 +19,11 @@ namespace Assets
             this.coolDown = coolDown;
         }
 
+        public Missile()
+        {
+
+        }
+
         public float Damage
         {
             get { return damage; }

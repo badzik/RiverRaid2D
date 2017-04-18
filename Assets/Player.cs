@@ -13,6 +13,7 @@ namespace Assets
         private int lives;
         private float defaultSpeed;
         private float actualSpeed;
+        private bool destroyed;
 
         public Player(Rigidbody2D playerBody)
         {
@@ -21,6 +22,7 @@ namespace Assets
             lives = 3;
             defaultSpeed = 0.001f;
             actualSpeed = defaultSpeed;
+            destroyed = false;
         }
 
         internal void UpdateBoxCollider()
@@ -85,6 +87,12 @@ namespace Assets
             {
                 actualSpeed = value;
             }
+        }
+
+        public bool Destroyed
+        {
+            get { return destroyed; }
+            set { destroyed = value; }
         }
 
     }

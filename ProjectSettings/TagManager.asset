@@ -9,6 +9,8 @@ TagManager:
   - LevelStart
   - LevelEnd
   - Missile
+  - Enemy
+  - Fuel
   layers:
   - Default
   - TransparentFX

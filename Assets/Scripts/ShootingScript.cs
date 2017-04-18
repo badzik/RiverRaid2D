@@ -22,22 +22,16 @@ public class ShootingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Input.touchCount > 0 && shootCooldown <= 0)
+        //if(Input.GetButtonDown("Fire1") && shootCooldown <= 0) //for keyboard shooting
+        if (Input.touchCount > 0 && shootCooldown <= 0 && !MainScript.Player.Destroyed)
         {
             for (int i = 0; i < Input.touchCount; i++)
             {
                 var touchPos = Input.GetTouch(i).position;
-                if (Input.GetTouch(i).phase==TouchPhase.Began  && (topLeft.Contains(touchPos) || topRight.Contains(touchPos) || bottomRight.Contains(touchPos)))
+                if (Input.GetTouch(i).phase == TouchPhase.Began && (topLeft.Contains(touchPos) || topRight.Contains(touchPos) || bottomRight.Contains(touchPos)))
                 {
-                    GameObject missile = Instantiate(Resources.Load("Prefabs/NormalMissilePrefab", typeof(GameObject))) as GameObject;
-                    missile.AddComponent<MissileScript>();
-                    missile.transform.position = new Vector2(MainScript.Player.PlayerBody.position.x, MainScript.Player.PlayerBody.position.y + MainScript.Player.PlayerBody.GetComponent<BoxCollider2D>().size.y);
-                    missile.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 3000 * MainScript.Player.DefaultSpeed);
-                    NormalMissile nm = new NormalMissile(100, missile);
+                    NormalMissile nm = new NormalMissile(100);
                     shootCooldown = nm.CoolDown;
-                    MainScript.missiles.Add(nm);
-
                 }
 
             }

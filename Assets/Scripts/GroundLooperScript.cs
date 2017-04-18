@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using Assets;
 
 public class GroundLooperScript : MonoBehaviour
 {
@@ -12,16 +13,32 @@ public class GroundLooperScript : MonoBehaviour
     int[][] nextLevel = new int[32][];
     int boxParts = 8;
     int scale = 16;
+    int[] propabilityArray;
     System.Random random = new System.Random();
 
     // Use this for initialization
     void Start()
     {
-        for (int i =0; i < currentLevel.Length; i++)
+        int[] tempArray = { Boat.Propability, Helicopter.Propability, Airplane.Propability, FuelTank.Propability };
+        propabilityArray = new int[100];
+        int i = 0;
+        int j = 0;
+        int counter = 0;
+        for (j = 0; j < propabilityArray.Length; j++)
+        {
+            propabilityArray[j] = i;
+            counter++;
+            if (counter >= tempArray[i])
+            {
+                i++;
+                counter = 0;
+            }
+        }
+        for (i = 0; i < currentLevel.Length; i++)
         {
             nextLevel[i] = new int[2];
             currentLevel[i] = new int[2];
-            currentLevel[i][0] = 2;
+            currentLevel[i][0] = 3;
             currentLevel[i][1] = 0;
         }
         //for begining and ending of level
@@ -31,6 +48,7 @@ public class GroundLooperScript : MonoBehaviour
         currentLevel[1][1] = 0;
         currentLevel[31][0] = 6;
         currentLevel[31][1] = 0;
+
         drawCurrentLevel();
     }
 
@@ -38,7 +56,7 @@ public class GroundLooperScript : MonoBehaviour
     {
         if (collider.tag != "Terrain")
         {
-            if (collider.tag != "Finish" && collider.tag!="Missile")
+            if (collider.tag != "Finish" && collider.tag != "Missile")
             {
                 float heightofBGObject = ((BoxCollider2D)collider).size.y;
                 Vector3 pos = collider.transform.position;
@@ -85,11 +103,6 @@ public class GroundLooperScript : MonoBehaviour
         diffy = ((BoxCollider2D)collider).size.y / boxParts;
         posy = boxPosition.y - (((BoxCollider2D)collider).size.y / 2.0f) + (diffy / 2.0f);
         sizey = diffy;
-        //if (boxNumber == 0)
-        //{
-        //    start = 2;
-        //    posy += 2 * diffy;
-        //}
         for (i = start + (boxNumber * boxParts); i < boxParts + (boxParts * boxNumber); i++)
         {
             triangles.Clear();
@@ -98,7 +111,7 @@ public class GroundLooperScript : MonoBehaviour
             posx = startx + (currentLevel[i][0] * diffx) / 2.0f;
             sizex = currentLevel[i][0] * diffx;
             drawGrass(posx, posy, sizex, sizey);
-
+            if (i > 1) generateEnemiesOrFuel(currentLevel, i, boxPosition.x, posy, diffx);
             //TRIANGLES CALCULATIONS
             if (i < currentLevel.Length - 1)
             {
@@ -234,21 +247,21 @@ public class GroundLooperScript : MonoBehaviour
     private void generateTerrain()
     {
         //TODO
-        for (int i = 2; i < currentLevel.Length-1; i++)
+        for (int i = 2; i < currentLevel.Length - 1; i++)
         {
             nextLevel[i][0] = 2;
-            if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 4);
+            if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 10);
             //nextLevel[i][1] = 0;
         }
         //begining of level
-        currentLevel[0][0] = 6;
-        currentLevel[0][1] = 0;
-        currentLevel[1][0] = 6;
-        currentLevel[1][1] = 0;
+        nextLevel[0][0] = 6;
+        nextLevel[0][1] = 0;
+        nextLevel[1][0] = 6;
+        nextLevel[1][1] = 0;
 
         //ending of level
-        currentLevel[31][0] = 6;
-        currentLevel[31][1] = 0;
+        nextLevel[31][0] = 6;
+        nextLevel[31][1] = 0;
     }
 
     private void drawGrass(float posx, float posy, float sizex, float sizey)
@@ -269,14 +282,118 @@ public class GroundLooperScript : MonoBehaviour
     {
         int size = 4;
         GameObject[] parts = new GameObject[size];
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             parts[i] = GameObject.Find(i.ToString());
         }
-        foreach(GameObject obj in parts)
+        foreach (GameObject obj in parts)
         {
             draw(obj.GetComponent<Collider2D>());
         }
     }
 
+    private void generateEnemiesOrFuel(int[][] lvl, int current, float posx, float posy, float diffx)
+    {
+        //0.35f longest item size
+        int propability = 4; //propability of generate item
+        float x, y;
+        int r, c;
+        int diff1, diff2, diff;
+        float x1, x2;
+        x = 3;
+        y = posy;
+        if (!(random.Next(1, propability + 1) == propability))
+        {
+            if (lvl[current][1] == 0)
+            {
+                if (current < lvl.Length - 1) diff1 = lvl[current + 1][0] - lvl[current][0];
+                else diff1 = 0;
+                diff2 = lvl[current - 1][0] - lvl[current][0];
+                diff = Math.Max(diff1, diff2);
+                if (diff > 1)
+                {
+                    x1 = posx - diffx * ((scale / 2) - lvl[current][0]) + (0.35f * diff);
+                    x2 = posx + diffx * ((scale / 2) - lvl[current][0]) - (0.35f * diff);
+                }
+                else
+                {
+                    x1 = posx - diffx * ((scale / 2) - lvl[current][0]) + (0.35f / 2);
+                    x2 = posx + diffx * ((scale / 2) - lvl[current][0]) - (0.35f / 2);
+                }
+                x = (float)random.NextDouble() * (x2 - x1) + x1;
+            }
+            else
+            {
+                if (current < lvl.Length - 1) diff1 = lvl[current + 1][1] - lvl[current][1];
+                else diff1 = 0 - lvl[current][1];
+                diff2 = lvl[current - 1][1] - lvl[current][1];
+                diff = Math.Max(diff1, diff2);
+                if (diff >= 1)
+                {
+                    if (diff > 3)
+                    {
+                        if (random.Next(0, 2) == 0)
+                        {
+                            x = posx - diffx * ((scale / 2) - lvl[current][0]) + 0.35f;
+                        }
+                        else
+                        {
+                            x = posx + diffx * ((scale / 2) - lvl[current][0]) - 0.35f;
+                        }
+                    }
+                    else
+                    {
+                        if (random.Next(0, 2) == 0)
+                        {
+                            x = posx - ((diffx * lvl[current][1]) / 2.0f) - (diff * 2 * (0.35f / 3));
+                        }
+                        else
+                        {
+                            x = posx + ((diffx * lvl[current][1]) / 2.0f) + (diff * 2 * (0.35f / 3));
+                        }
+                    }
+                }
+                else
+                {
+                    if (random.Next(0, 2) == 0)
+                    {
+                        x = posx - ((diffx * lvl[current][1]) / 2.0f) - (0.35f / 2);
+                    }
+                    else
+                    {
+                        x = posx + ((diffx * lvl[current][1]) / 2.0f) + (0.35f / 2);
+                    }
+                }
+
+            }
+
+            //chose what type of item should be spawned
+            r = random.Next(0, 100);
+            c = propabilityArray[r];
+            switch (c)
+            {
+                case (0):
+                    {
+                        Boat boat = new Boat(100, x, y);
+                        break;
+                    }
+                case (1):
+                    {
+                        Helicopter helicopter = new Helicopter(100, x, y);
+                        break;
+                    }
+                case (2):
+                    {
+                        Airplane airplane = new Airplane(100, x, y);
+                        break;
+
+                    }
+                case (3):
+                    {
+                        FuelTank fueltank = new FuelTank(x, y);
+                        break;
+                    }
+            }
+        }
+    }
 }
