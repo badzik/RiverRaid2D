@@ -11,6 +11,7 @@ TagManager:
   - Missile
   - Enemy
   - Fuel
+  - Interface
   layers:
   - Default
   - TransparentFX
