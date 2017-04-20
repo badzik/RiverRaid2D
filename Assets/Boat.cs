@@ -9,12 +9,14 @@ namespace Assets
     class Boat : Enemy
     {
         public static int Propability = 35;
-        public Boat(float health,float posx,float posy)
+        public Boat(float health,float posx,float posy,int speed)
         {
             this.Health = health;
             this.GameObject= GameObject.Instantiate(Resources.Load("Prefabs/BoatPrefab", typeof(GameObject))) as GameObject;
             this.GameObject.transform.position = new Vector2(posx, posy);
             this.IsFlyingOver = false;
+            this.Speed = speed;
+            this.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(this.Speed * MainScript.Player.DefaultSpeed, 0);
             MainScript.enemies.Add(this);
         }
     }
