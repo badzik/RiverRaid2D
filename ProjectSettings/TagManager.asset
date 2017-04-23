@@ -12,6 +12,7 @@ TagManager:
   - Enemy
   - Fuel
   - Interface
+  - Score
   layers:
   - Default
   - TransparentFX
@@ -51,4 +52,13 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Interface
+    uniqueID: 2055243065
+    locked: 0
+  - name: FuelIndicator
+    uniqueID: 1146297299
+    locked: 0
+  - name: UI Elements
+    uniqueID: 2537262869
     locked: 0
