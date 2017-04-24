@@ -95,11 +95,15 @@ public class MovingScript : MonoBehaviour
     {
         //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag == "Enemy")
         //{
+<<<<<<< HEAD
         //    MainScript.Player.Destroyed = true;
         //    MainScript.Player.PlayerBody.velocity = Vector2.zero;
         //    MainScript.Player.Lives -= 1;
         //    normalSpeedSound.Stop();
         //    explosion.Play();
+=======
+        //    MainScript.KillPlayer();
+>>>>>>> 0882ffcd4093d696b38e547ac0ed8c1626fd2b80
         //}
     }
 }
