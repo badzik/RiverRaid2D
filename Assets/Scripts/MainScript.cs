@@ -4,6 +4,7 @@ using UnityStandardAssets.CrossPlatformInput;
 using Assets;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainScript : MonoBehaviour {
 
@@ -22,6 +23,22 @@ public class MainScript : MonoBehaviour {
 	
 
 	void FixedUpdate () {
+        GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
+    }
 
+    public static void KillPlayer()
+    {
+        Player.Destroyed = true;
+        Player.PlayerBody.velocity = Vector2.zero;
+        Player.Lives -= 1;
+        if (Player.Lives > 0)
+        {
+            Destroy(GameObject.Find("Live" + (Player.Lives + 1).ToString()));
+        }
+        //freeze all enemies
+        foreach(Enemy e in enemies)
+        {
+            e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+        }
     }
 }

@@ -72,11 +72,9 @@ public class MovingScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag=="Enemy")
+        //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag == "Enemy")
         //{
-        //    MainScript.Player.Destroyed = true;
-        //    MainScript.Player.PlayerBody.velocity = Vector2.zero;
-        //    MainScript.Player.Lives -= 1;
+        //    MainScript.KillPlayer();
         //}
     }
 }
