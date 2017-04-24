@@ -9,11 +9,28 @@ public class MovingScript : MonoBehaviour
     private float speedDelta;
     public float MaxSpeed;
     public float MinSpeed;
+    float normalFlightSoundPitch;
+    float maxFlightSoundPitch;
+    float minFlightSoundPitch;
+    float pitchDifference = 0.01f;
+    AudioSource[] sounds;
+    AudioSource flightSound;
+    AudioSource explosionSound;
     // Use this for initialization
     void Start()
     {
-        MaxSpeed = MainScript.Player.DefaultSpeed * 5;
-        MinSpeed = MainScript.Player.DefaultSpeed / 3; //TODO
+        MaxSpeed = MainScript.Player.DefaultSpeed * 4;
+        MinSpeed = MainScript.Player.DefaultSpeed / 1.4f; //TODO
+        sounds = GetComponents<AudioSource>();
+        if (sounds.Length > 0)
+        {
+            explosionSound = sounds[0];
+            flightSound = sounds[1];
+            normalFlightSoundPitch = flightSound.pitch;
+            minFlightSoundPitch = flightSound.pitch-0.2f;
+            maxFlightSoundPitch = flightSound.pitch+1f;
+            flightSound.Play();
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +59,7 @@ public class MovingScript : MonoBehaviour
                 if (MainScript.Player.ActualSpeed < MaxSpeed)
                 {
                     MainScript.Player.ActualSpeed += speedDelta;
+                    if(flightSound!=null && flightSound.pitch<maxFlightSoundPitch) flightSound.pitch += pitchDifference;
                 }
             }
             if (speedVec.y < 0)
@@ -49,6 +67,7 @@ public class MovingScript : MonoBehaviour
                 if (MainScript.Player.ActualSpeed > MinSpeed)
                 {
                     MainScript.Player.ActualSpeed += speedDelta;
+                   if (flightSound != null && flightSound.pitch > minFlightSoundPitch) flightSound.pitch -= pitchDifference;
                 }
             }
             if (speedVec.y == 0.0f)
@@ -57,10 +76,12 @@ public class MovingScript : MonoBehaviour
                 if (MainScript.Player.DefaultSpeed <= MainScript.Player.ActualSpeed)
                 {
                     MainScript.Player.ActualSpeed -= speedDelta;
+                    if (flightSound != null && flightSound.pitch > normalFlightSoundPitch) flightSound.pitch -= pitchDifference;
                 }
                 if (MainScript.Player.DefaultSpeed >= MainScript.Player.ActualSpeed)
                 {
                     MainScript.Player.ActualSpeed += speedDelta;
+                    if (flightSound != null && flightSound.pitch < normalFlightSoundPitch) flightSound.pitch += pitchDifference;
                 }
             }
             MainScript.Player.UpdateBoxCollider();
@@ -72,11 +93,13 @@ public class MovingScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag=="Enemy")
+        //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag == "Enemy")
         //{
         //    MainScript.Player.Destroyed = true;
         //    MainScript.Player.PlayerBody.velocity = Vector2.zero;
         //    MainScript.Player.Lives -= 1;
+        //    normalSpeedSound.Stop();
+        //    explosion.Play();
         //}
     }
 }

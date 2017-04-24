@@ -32,6 +32,8 @@ public class ShootingScript : MonoBehaviour
                 {
                     NormalMissile nm = new NormalMissile(100);
                     shootCooldown = nm.CoolDown;
+                    var shoot = GetComponent<AudioSource>();
+                    shoot.Play();
                 }
 
             }
