@@ -24,6 +24,7 @@ public class MainScript : MonoBehaviour {
 
 	void FixedUpdate () {
         GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
+        
     }
 
     public static void KillPlayer()
@@ -31,6 +32,8 @@ public class MainScript : MonoBehaviour {
         Player.Destroyed = true;
         Player.PlayerBody.velocity = Vector2.zero;
         Player.Lives -= 1;
+        var player = GameObject.Find("Player");
+        player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
         if (Player.Lives > 0)
         {
             Destroy(GameObject.Find("Live" + (Player.Lives + 1).ToString()));
@@ -40,5 +43,25 @@ public class MainScript : MonoBehaviour {
         {
             e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
         }
+    }
+
+    public static void KillEnemy(Enemy enemy)
+    {
+        Player.Points+=enemy.Score;
+        var anim = enemy.GameObject.GetComponent<Animator>();
+        if (anim != null) anim.Stop();
+        if (enemy.GameObject.name != "BoatPrefab(Clone)")
+        {
+            GameObject smallExplosion = GameObject.Instantiate(Resources.Load("Prefabs/SmallExplosionPrefab", typeof(GameObject))) as GameObject;
+            smallExplosion.transform.position = new Vector2(enemy.GameObject.transform.position.x, enemy.GameObject.transform.position.y);
+        }
+        else
+        {
+            GameObject bigExplosion = GameObject.Instantiate(Resources.Load("Prefabs/BigExplosionPrefab", typeof(GameObject))) as GameObject;
+            bigExplosion.transform.position = new Vector2(enemy.GameObject.transform.position.x, enemy.GameObject.transform.position.y);
+           // Destroy(bigExplosion);
+        }
+        Destroy(enemy.GameObject);    //jeszcze z listy
+        GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
     }
 }

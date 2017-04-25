@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
 
 public class MissileScript : MonoBehaviour {
 
@@ -29,6 +30,15 @@ public class MissileScript : MonoBehaviour {
         {
             MainScript.missiles.Remove(MainScript.missiles.Find(x => x.GameObject.Equals(gameObject)));
             Destroy(gameObject);
+        }
+    }
+
+    public static void CheckTypeOfMissile(ref Missile missilie)
+    {
+        if(missilie.GameObject.name == "NormalMissilePrefab(Clone)")
+        {
+            MainScript.missiles.Remove(missilie);
+            Destroy(missilie.GameObject);
         }
     }
 }

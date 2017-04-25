@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
 
 public class EnemyScript : MonoBehaviour
 {
@@ -48,6 +49,28 @@ public class EnemyScript : MonoBehaviour
                 rotation += rotation;
             }
             gameObject.transform.localRotation = Quaternion.Euler(0, rotation, 0);
+        }
+
+        if (collider.tag == "Missile" || collider.tag == "Player")
+        {
+            Enemy enemy = MainScript.enemies.Find(x => x.GameObject.Equals(gameObject));
+            if (collider.tag == "Player")
+            {
+                enemy.Health = 0f;
+            }
+            else
+            {
+                Missile missile;
+                missile = MainScript.missiles.Find(x => x.GameObject.tag == "Missile");
+                float damage = missile.Damage;
+                enemy.Health -= damage;
+                MissileScript.CheckTypeOfMissile(ref missile);
+                Destroy(missile.GameObject);
+            }
+            if (enemy.Health <= 0)
+            {
+                MainScript.KillEnemy(enemy);
+            }
         }
     }
 }
