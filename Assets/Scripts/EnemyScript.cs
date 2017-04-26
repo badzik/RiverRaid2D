@@ -61,11 +61,10 @@ public class EnemyScript : MonoBehaviour
             else
             {
                 Missile missile;
-                missile = MainScript.missiles.Find(x => x.GameObject.tag == "Missile");
+                missile = MainScript.missiles.Find(x => x.GameObject.GetComponent<Collider2D>().Equals(collider));
                 float damage = missile.Damage;
                 enemy.Health -= damage;
                 MissileScript.CheckTypeOfMissile(ref missile);
-                Destroy(missile.GameObject);
             }
             if (enemy.Health <= 0)
             {

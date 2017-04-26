@@ -48,20 +48,19 @@ public class MainScript : MonoBehaviour {
     public static void KillEnemy(Enemy enemy)
     {
         Player.Points+=enemy.Score;
-        var anim = enemy.GameObject.GetComponent<Animator>();
-        if (anim != null) anim.Stop();
         if (enemy.GameObject.name != "BoatPrefab(Clone)")
         {
             GameObject smallExplosion = GameObject.Instantiate(Resources.Load("Prefabs/SmallExplosionPrefab", typeof(GameObject))) as GameObject;
             smallExplosion.transform.position = new Vector2(enemy.GameObject.transform.position.x, enemy.GameObject.transform.position.y);
+            Destroy(smallExplosion, 1);
         }
         else
         {
             GameObject bigExplosion = GameObject.Instantiate(Resources.Load("Prefabs/BigExplosionPrefab", typeof(GameObject))) as GameObject;
             bigExplosion.transform.position = new Vector2(enemy.GameObject.transform.position.x, enemy.GameObject.transform.position.y);
-           // Destroy(bigExplosion);
+            Destroy(bigExplosion,1);
         }
-        Destroy(enemy.GameObject);    //jeszcze z listy
-        GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
+        Destroy(enemy.GameObject);
+        enemies.Remove(enemy);
     }
 }
