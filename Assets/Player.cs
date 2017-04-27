@@ -15,6 +15,7 @@ namespace Assets
         private float actualSpeed;
         private bool destroyed;
         private int points;
+        private int level;
 
         public Player(Rigidbody2D playerBody)
         {
@@ -25,6 +26,7 @@ namespace Assets
             actualSpeed = defaultSpeed;
             destroyed = false;
             points = 0;
+            level = 1;
         }
 
         internal void UpdateBoxCollider()
@@ -106,6 +108,18 @@ namespace Assets
             set
             {
                 points = value;
+            }
+        }
+
+        public int Level
+        {
+            get
+            {
+                return level;
+            }
+            set
+            {
+                level = value;
             }
         }
 

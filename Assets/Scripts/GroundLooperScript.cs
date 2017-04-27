@@ -48,6 +48,10 @@ public class GroundLooperScript : MonoBehaviour
         currentLevel[1][1] = 0;
         currentLevel[31][0] = 6;
         currentLevel[31][1] = 0;
+        if (Container.i.SavedLevel != 1)
+        {
+            Array.Copy(Container.i.ActualLevel, currentLevel, 32);
+        }
 
         drawCurrentLevel();
     }
@@ -111,7 +115,14 @@ public class GroundLooperScript : MonoBehaviour
             posx = startx + (currentLevel[i][0] * diffx) / 2.0f;
             sizex = currentLevel[i][0] * diffx;
             drawGrass(posx, posy, sizex, sizey);
+
             if (i > 1) generateEnemiesOrFuel(currentLevel, i, boxPosition.x, posy, diffx);
+
+            if (random.Next(0,8)==0)
+            {
+                if (i > 1 && (currentLevel[i][0] >= 3 || currentLevel[i][1] != 0)) drawHouse(currentLevel[i][0], currentLevel[i][1], boxPosition.x, posy, diffx);
+            }
+
             //TRIANGLES CALCULATIONS
             if (i < currentLevel.Length - 1)
             {
@@ -249,9 +260,9 @@ public class GroundLooperScript : MonoBehaviour
         //TODO
         for (int i = 2; i < currentLevel.Length - 1; i++)
         {
-            nextLevel[i][0] = 2;
-            if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 10);
-            //nextLevel[i][1] = 0;
+            nextLevel[i][0] = random.Next(2, 7);
+            //if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 10);
+            nextLevel[i][1] = 0;
         }
         //begining of level
         nextLevel[0][0] = 6;
@@ -397,5 +408,41 @@ public class GroundLooperScript : MonoBehaviour
                     }
             }
         }
+    }
+
+    private void drawHouse(int c1,int c2, float posx, float posy, float diffx)
+    {
+        float x=0.0f, y;
+        y = posy;
+        GameObject house = GameObject.Instantiate(Resources.Load("Prefabs/HousePrefab", typeof(GameObject))) as GameObject;
+        if (c2 == 0)
+        {
+            //choose side
+            if (random.Next(0, 2) == 0)
+            {
+                x = posx - diffx * ((scale / 2) - c1)-3*(house.GetComponent<Renderer>().bounds.size.x/4);
+            }
+            else
+            {
+                x = posx + diffx * ((scale / 2) - c1)+ 3*(house.GetComponent<Renderer>().bounds.size.x/4);
+            }
+        }
+        else
+        {
+            x = posx;
+        }
+        if(random.Next(0, 2) == 0)
+        {
+            house.transform.RotateAround(transform.position, transform.up, 180f);
+        }
+        house.transform.position = new Vector3(x, y);
+    }
+
+    //CALL THIS AFTER BRIDGE DESTROYED
+    public void NextLevel()
+    {
+        Array.Copy(currentLevel, Container.i.ActualLevel, currentLevel.Length);
+        MainScript.Player.Level += 1;
+        Container.i.SavedLevel = MainScript.Player.Level;
     }
 }

@@ -16,6 +16,7 @@ public class MovingScript : MonoBehaviour
     AudioSource[] sounds;
     AudioSource flightSound;
     AudioSource explosionSound;
+    bool isColliding;
     // Use this for initialization
     void Start()
     {
@@ -31,6 +32,11 @@ public class MovingScript : MonoBehaviour
             maxFlightSoundPitch = flightSound.pitch+1f;
             flightSound.Play();
         }
+    }
+
+    void Update()
+    {
+        isColliding = false;
     }
 
     // Update is called once per frame
@@ -93,11 +99,13 @@ public class MovingScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        //if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag == "Enemy")
-        //{
-        //    flightSound.Stop();
-        //    explosionSound.Play();
-        //    MainScript.KillPlayer();
-        //}
+        if (isColliding) return;
+        isColliding = true;
+        if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag=="Enemy")
+        {
+            flightSound.Stop();
+            explosionSound.Play();
+            MainScript.KillPlayer();
+        }
     }
 }
