@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets;
 
 public class FuelTankScript : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class FuelTankScript : MonoBehaviour
     AudioSource startSound;
     AudioSource restSound;
     float refuelingSpeed = 0.25f;
+    int score = 80;
     // Use this for initialization
     void Start()
     {
@@ -47,6 +49,18 @@ public class FuelTankScript : MonoBehaviour
                     restSound.Play();
                 }
             }
+        }
+        if((collider.tag == "Missile"))
+        {
+            FuelTank fuelTank = MainScript.fuelTanks.Find(x => x.GameObject.Equals(gameObject));
+            Missile missile = MainScript.missiles.Find(x => x.GameObject.Equals(collider.gameObject));
+            MainScript.Player.Points += score;
+            GameObject smallExplosion = GameObject.Instantiate(Resources.Load("Prefabs/SmallExplosionPrefab", typeof(GameObject))) as GameObject;
+            smallExplosion.transform.position = new Vector2(fuelTank.GameObject.transform.position.x, fuelTank.GameObject.transform.position.y);
+            Destroy(smallExplosion, 1);
+            Destroy(fuelTank.GameObject);
+            MainScript.fuelTanks.Remove(fuelTank);
+            MissileScript.CheckTypeOfMissile(ref missile);
         }
     }
 }

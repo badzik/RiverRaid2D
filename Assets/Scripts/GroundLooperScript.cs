@@ -14,11 +14,14 @@ public class GroundLooperScript : MonoBehaviour
     int boxParts = 8;
     int scale = 16;
     int[] propabilityArray;
+    GameObject bridge;
     System.Random random = new System.Random();
 
     // Use this for initialization
     void Start()
     {
+        bridge = GameObject.Find("Bridge");
+        bridge.SetActive(false);
         int[] tempArray = { Boat.Propability, Helicopter.Propability, Airplane.Propability, FuelTank.Propability };
         propabilityArray = new int[100];
         int i = 0;
@@ -73,6 +76,8 @@ public class GroundLooperScript : MonoBehaviour
                 Vector3 borderPos = collider.transform.position;
                 borderPos.y += levelSize;
                 collider.transform.position = borderPos;
+                bridge.SetActive(true);
+
             }
         }
         else

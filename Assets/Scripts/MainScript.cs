@@ -32,6 +32,7 @@ public class MainScript : MonoBehaviour
     void FixedUpdate()
     {
         GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
+     //   Camera.main.backgroundColor = Color.Lerp(MissileScript.color1, MissileScript.color2, Mathf.PingPong(Time.time, 0.5f));
     }
 
     void Update()
@@ -53,17 +54,17 @@ public class MainScript : MonoBehaviour
 
     public static void KillPlayer()
     {
-        Player.Destroyed = true;
-        Player.PlayerBody.velocity = Vector2.zero;
-        Player.Lives -= 1;
-        var player = GameObject.Find("Player");
-        player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
+        //Player.Destroyed = true;
+        //Player.PlayerBody.velocity = Vector2.zero;
+        //Player.Lives -= 1;
+        //var player = GameObject.Find("Player");
+        //player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
 
-        //freeze all enemies
-        foreach (Enemy e in enemies)
-        {
-            e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
-        }
+        ////freeze all enemies
+        //foreach (Enemy e in enemies)
+        //{
+        //    e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+        //}
     }
 
     public static void KillEnemy(Enemy enemy)

@@ -2,17 +2,19 @@
 using System.Collections;
 using Assets;
 
-public class MissileScript : MonoBehaviour {
+public class MissileScript : MonoBehaviour
+{
 
     bool seen = false;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    // Use this for initialization
+    void Start()
+    {
+    }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         if (GetComponent<Renderer>().isVisible)
             seen = true;
 
@@ -21,7 +23,6 @@ public class MissileScript : MonoBehaviour {
             MainScript.missiles.Remove(MainScript.missiles.Find(x => x.GameObject.Equals(gameObject)));
             Destroy(gameObject);
         }
-            
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -32,10 +33,9 @@ public class MissileScript : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-
     public static void CheckTypeOfMissile(ref Missile missilie)
     {
-        if(missilie.GameObject.name == "NormalMissilePrefab(Clone)")
+        if (missilie.GameObject.name == "NormalMissilePrefab(Clone)")
         {
             MainScript.missiles.Remove(missilie);
             Destroy(missilie.GameObject);
