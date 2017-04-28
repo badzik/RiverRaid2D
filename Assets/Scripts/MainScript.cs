@@ -15,8 +15,16 @@ public class MainScript : MonoBehaviour
     public static List<FuelTank> fuelTanks;
     public static bool Init = false;
 
+    static int flashingTime = 50;
+    int flashingCounter;
+    Color orgColor;
+
+
     void Start()
     {
+        flashingCounter = 0;
+        orgColor = Camera.main.backgroundColor;
+
         Player = new Player(this.GetComponent<Rigidbody2D>());
         Player.UpdateBoxCollider();
         missiles = new List<Missile>();
@@ -32,7 +40,27 @@ public class MainScript : MonoBehaviour
     void FixedUpdate()
     {
         GameObject.FindGameObjectWithTag("Score").GetComponent<Text>().text = Player.Points.ToString();
-     //   Camera.main.backgroundColor = Color.Lerp(MissileScript.color1, MissileScript.color2, Mathf.PingPong(Time.time, 0.5f));
+        if (BridgeScript.bridgeDestroyed)
+        {
+            if (flashingCounter <= flashingTime)
+            {
+                if (flashingCounter % 3 == 0)
+                {
+                    Camera.main.backgroundColor = Color.red;
+                }
+                else
+                {
+                    Camera.main.backgroundColor = orgColor;
+                }
+                flashingCounter++;
+            }
+            else
+            {
+                Camera.main.backgroundColor = orgColor;
+                BridgeScript.bridgeDestroyed = false;
+                flashingCounter = 0;
+            }
+        }
     }
 
     void Update()
@@ -54,17 +82,17 @@ public class MainScript : MonoBehaviour
 
     public static void KillPlayer()
     {
-        //Player.Destroyed = true;
-        //Player.PlayerBody.velocity = Vector2.zero;
-        //Player.Lives -= 1;
-        //var player = GameObject.Find("Player");
-        //player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
+        Player.Destroyed = true;
+        Player.PlayerBody.velocity = Vector2.zero;
+        Player.Lives -= 1;
+        var player = GameObject.Find("Player");
+        player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
 
-        ////freeze all enemies
-        //foreach (Enemy e in enemies)
-        //{
-        //    e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
-        //}
+        //freeze all enemies
+        foreach (Enemy e in enemies)
+        {
+            e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
+        }
     }
 
     public static void KillEnemy(Enemy enemy)

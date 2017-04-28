@@ -1493,6 +1493,7 @@ GameObject:
   - 4: {fileID: 1606906249}
   - 212: {fileID: 1606906250}
   - 61: {fileID: 1606906251}
+  - 114: {fileID: 1606906252}
   m_Layer: 0
   m_Name: Bridge
   m_TagString: Finish
@@ -1560,6 +1561,17 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 0.63, y: 0.26000002}
+--- !u!114 &1606906252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1606906248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b66137361beda7748832080694379be6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1705081382
 GameObject:
   m_ObjectHideFlags: 0
