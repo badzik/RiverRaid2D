@@ -402,7 +402,7 @@ public class GroundLooperScript : MonoBehaviour
                     {
                         int rSide = random.Next(-1, 2);
                         if (rSide == 0) rSide = -1;
-                        Airplane airplane = new Airplane(100, 1.25f*rSide, y,800*rSide*-1);
+                        Airplane airplane = new Airplane(100, 1.90f*rSide, y,900*rSide*-1);
                         break;
 
                     }

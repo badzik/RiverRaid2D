@@ -5,25 +5,30 @@ using Assets;
 public class EnemyScript : MonoBehaviour
 {
 
+    int probability;
+    //System.Random random = new System.Random();
     // Use this for initialization
     void Start()
     {
-
+        probability = Random.Range(1 + MainScript.Player.Level, 100 + MainScript.Player.Level);
     }
     // Update is called once per frame
     void Update()
     {
+        var enemy = MainScript.enemies.Find(x => x.GameObject == gameObject);
+        if (((Camera.main.transform.position.y + (Camera.main.orthographicSize) / 1.5) > gameObject.transform.position.y) && probability >= 50 && MainScript.Player.Level !=1)
+        {
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.Speed * MainScript.Player.DefaultSpeed, 0);
+            if(gameObject.name == "AirPlanePrefab(Clone)")
+            {
+                int rotation = (enemy.Speed > 0) ? 180 : 360;
+                gameObject.transform.localRotation = Quaternion.Euler(0, rotation, 0);
+            }
+        }
         if ((Camera.main.transform.position.y - Camera.main.orthographicSize) > gameObject.transform.position.y)
         {
             MainScript.enemies.Remove(MainScript.enemies.Find(x => x.GameObject.Equals(gameObject)));
             Destroy(gameObject);
-        }
-        else if ((Camera.main.transform.position.y + Camera.main.orthographicSize) > gameObject.transform.position.y && gameObject.name == "AirPlanePrefab(Clone)")
-        {
-            var plane = MainScript.enemies.Find(x => x.GameObject.Equals(gameObject));
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(plane.Speed * MainScript.Player.DefaultSpeed, 0);
-            int rotation = (plane.Speed > 0) ? 180:360; 
-            gameObject.transform.localRotation = Quaternion.Euler(0, rotation, 0);
         }
     }
 

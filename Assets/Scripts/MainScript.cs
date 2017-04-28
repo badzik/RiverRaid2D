@@ -110,8 +110,8 @@ public class MainScript : MonoBehaviour
             bigExplosion.transform.position = new Vector2(enemy.GameObject.transform.position.x, enemy.GameObject.transform.position.y);
             Destroy(bigExplosion, 1);
         }
-        Destroy(enemy.GameObject);
-        enemies.Remove(enemy);
+            Destroy(enemy.GameObject);
+            enemies.Remove(enemy);
     }
 
     public void ResetLevel()

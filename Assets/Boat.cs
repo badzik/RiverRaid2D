@@ -17,7 +17,6 @@ namespace Assets
             this.GameObject.transform.position = new Vector2(posx, posy);
             this.IsFlyingOver = false;
             this.Speed = speed;
-            this.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(this.Speed * MainScript.Player.DefaultSpeed, 0);
             base.Score = score;
             MainScript.enemies.Add(this);
         }
