@@ -101,7 +101,7 @@ public class MovingScript : MonoBehaviour
     {
         if (isColliding) return;
         isColliding = true;
-        if (collider.tag == "Terrain" || collider.tag == "Finish")
+        if (collider.tag == "Terrain" || collider.tag == "Finish" || collider.tag=="Enemy")
         {
             flightSound.Stop();
             explosionSound.Play();

@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using Assets;
+using System.Linq;
 
 public class GroundLooperScript : MonoBehaviour
 {
@@ -53,7 +54,7 @@ public class GroundLooperScript : MonoBehaviour
         currentLevel[31][1] = 0;
         if (Container.i.SavedLevel != 1)
         {
-            Array.Copy(Container.i.ActualLevel, currentLevel, 32);
+            currentLevel= Container.i.ActualLevel.Select(a => a.ToArray()).ToArray();
         }
 
         drawCurrentLevel();
@@ -123,7 +124,7 @@ public class GroundLooperScript : MonoBehaviour
 
             if (i > 1) generateEnemiesOrFuel(currentLevel, i, boxPosition.x, posy, diffx);
 
-            if (random.Next(0,8)==0)
+            if (random.Next(0, 8) == 0)
             {
                 if (i > 1 && (currentLevel[i][0] >= 3 || currentLevel[i][1] != 0)) drawHouse(currentLevel[i][0], currentLevel[i][1], boxPosition.x, posy, diffx);
             }
@@ -255,20 +256,23 @@ public class GroundLooperScript : MonoBehaviour
         }
         if (boxNumber == numBGPanels - 1)
         {
-            Array.Copy(nextLevel, currentLevel, nextLevel.Length);
-            generateTerrain();
+            generateTerrain(MainScript.Player.Level);
+            currentLevel = nextLevel.Select(a => a.ToArray()).ToArray();
         }
     }
 
-    private void generateTerrain()
+    private void generateTerrain(int lvl)
     {
-        //TODO
-        for (int i = 2; i < currentLevel.Length - 1; i++)
-        {
-            nextLevel[i][0] = random.Next(2, 7);
-            //if (i > 2 && i < 30) nextLevel[i][1] = random.Next(0, 10);
-            nextLevel[i][1] = 0;
-        }
+        int i;
+        int islands; //randomly choosed from 0 to 3, says how many islands there will be on level
+        int islandsdrawn = 0; // indicates how many islands has been drawn 
+        int currentIslandSize = 0; //indicates how large is currently drawn island
+        int rand; //used to generate a number 
+        int islandCooldown = 0; //used for not drawing island directly after island
+        int islandBegin = 0; //used for creating area before island
+
+        bool islandDrawing = false; //indicates that currently island is drawn
+
         //begining of level
         nextLevel[0][0] = 6;
         nextLevel[0][1] = 0;
@@ -278,6 +282,107 @@ public class GroundLooperScript : MonoBehaviour
         //ending of level
         nextLevel[31][0] = 6;
         nextLevel[31][1] = 0;
+
+
+        if ((lvl + 1) % 2 == 0)
+        {
+            //GENERATED LEVEL
+            
+            //choosing number of islands for level
+            islands = random.Next(0, 4);
+
+            //main loop
+            for (i = 2; i < nextLevel.Length - 1; i++)
+            {
+                //ranbdomly starting island drawing
+                if (random.Next(0, 6) >= 3 && islandsdrawn < islands && i > 3 && !islandDrawing && islandCooldown==0)
+                {
+                    islandDrawing = true;
+                    islandsdrawn++;
+                    islandBegin = 2;  //CHANGE TO INCREASE WIDE AREA BEFORE ISLAND
+                }
+
+                //if statement that based on islandDrawing variable draws area with island or without
+                if (islandDrawing && i < nextLevel.Length - 3)
+                {
+                    if (islandBegin > 0)
+                    {
+                        nextLevel[i][0] = 2;
+                        nextLevel[i][1] = 0;
+                        islandBegin--;
+                    }
+                    else
+                    {
+                        do
+                        {
+                            rand = random.Next(-3, 4);
+                            nextLevel[i][0] = 2;
+                            nextLevel[i][1] = nextLevel[i - 1][1] + rand;
+                        } while (nextLevel[i - 1][1] + rand < 1 || nextLevel[i - 1][1] + rand > 10);
+                        currentIslandSize++;
+
+                        if (i > nextLevel.Length - 3)
+                        {
+                            nextLevel[i][1] = 0;
+                        }
+                    }
+
+                    if (islands > 1 && currentIslandSize >= 3)
+                    {
+                        if (random.Next(0, 11) == 0)
+                        {
+                            islandDrawing = false;
+                            currentIslandSize = 0;
+                            islandCooldown = 3;
+                        }
+
+                    }
+                    if (islands == 1 && currentIslandSize >= 8)
+                    {
+                        if (random.Next(0, 11) == 0)
+                        {
+                            islandDrawing = false;
+                            currentIslandSize = 0;
+                            islandCooldown = 3;
+                        }
+                    }
+                }
+                else
+                {
+
+                    if (islandCooldown >= 2)
+                    {
+                        nextLevel[i][0] = 2;
+                        nextLevel[i][1] = 0;
+                        islandCooldown--;
+                    }
+                    else
+                    {
+                        do
+                        {
+                            rand = random.Next(-3, 4);
+                            nextLevel[i][0] = nextLevel[i - 1][0] + rand;
+                            nextLevel[i][1] = 0;
+                        } while (nextLevel[i - 1][0] + rand < 2 || nextLevel[i - 1][0] + rand > 7);
+                        if (islandCooldown >0)
+                        {
+                            islandCooldown--;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            //SIMPLE LEVEL
+            for (i = 2; i < nextLevel.Length - 1; i++)
+            {
+                nextLevel[i][0] = 3;
+                nextLevel[i][1] = 0;
+            }
+        }
+
+
     }
 
     private void drawGrass(float posx, float posy, float sizex, float sizey)
@@ -390,19 +495,19 @@ public class GroundLooperScript : MonoBehaviour
             {
                 case (0):
                     {
-                        Boat boat = new Boat(100, x, y,-400);
+                        Boat boat = new Boat(100, x, y, -400);
                         break;
                     }
                 case (1):
                     {
-                        Helicopter helicopter = new Helicopter(100, x, y,500);
+                        Helicopter helicopter = new Helicopter(100, x, y, 500);
                         break;
                     }
                 case (2):
                     {
                         int rSide = random.Next(-1, 2);
                         if (rSide == 0) rSide = -1;
-                        Airplane airplane = new Airplane(100, 1.90f*rSide, y,900*rSide*-1);
+                        Airplane airplane = new Airplane(100, 1.90f * rSide, y, 900 * rSide * -1);
                         break;
 
                     }
@@ -415,9 +520,9 @@ public class GroundLooperScript : MonoBehaviour
         }
     }
 
-    private void drawHouse(int c1,int c2, float posx, float posy, float diffx)
+    private void drawHouse(int c1, int c2, float posx, float posy, float diffx)
     {
-        float x=0.0f, y;
+        float x = 0.0f, y;
         y = posy;
         GameObject house = GameObject.Instantiate(Resources.Load("Prefabs/HousePrefab", typeof(GameObject))) as GameObject;
         if (c2 == 0)
@@ -425,18 +530,18 @@ public class GroundLooperScript : MonoBehaviour
             //choose side
             if (random.Next(0, 2) == 0)
             {
-                x = posx - diffx * ((scale / 2) - c1)-3*(house.GetComponent<Renderer>().bounds.size.x/4);
+                x = posx - diffx * ((scale / 2) - c1) - 3 * (house.GetComponent<Renderer>().bounds.size.x / 4);
             }
             else
             {
-                x = posx + diffx * ((scale / 2) - c1)+ 3*(house.GetComponent<Renderer>().bounds.size.x/4);
+                x = posx + diffx * ((scale / 2) - c1) + 3 * (house.GetComponent<Renderer>().bounds.size.x / 4);
             }
         }
         else
         {
             x = posx;
         }
-        if(random.Next(0, 2) == 0)
+        if (random.Next(0, 2) == 0)
         {
             house.transform.RotateAround(transform.position, transform.up, 180f);
         }
@@ -446,7 +551,7 @@ public class GroundLooperScript : MonoBehaviour
     //CALL THIS AFTER BRIDGE DESTROYED
     public void NextLevel()
     {
-        Array.Copy(currentLevel, Container.i.ActualLevel, currentLevel.Length);
+        Container.i.ActualLevel= currentLevel.Select(a => a.ToArray()).ToArray();
         MainScript.Player.Level += 1;
         Container.i.SavedLevel = MainScript.Player.Level;
     }

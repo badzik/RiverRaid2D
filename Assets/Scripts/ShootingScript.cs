@@ -29,15 +29,15 @@ public class ShootingScript : MonoBehaviour
             //{
             //    var touchPos = Input.GetTouch(i).position;
             //    if (Input.GetTouch(i).phase == TouchPhase.Began && (topLeft.Contains(touchPos) || topRight.Contains(touchPos) || bottomRight.Contains(touchPos)))
-            //    {
+                {
                     NormalMissile nm = new NormalMissile(100);
                     shootCooldown = nm.CoolDown;
                     AudioSource[] sounds = GetComponents<AudioSource>();
                     var shot = sounds[2];
                      shot.Play();
-              //  }
+                }
 
-           // }
+            //}
         }
     }
 
