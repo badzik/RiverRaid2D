@@ -11,9 +11,11 @@ public class CameraMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 pos = transform.position;
-        pos.y = MainScript.Player.PlayerBody.transform.position.y + 0.3f ;
-        transform.position = pos;
+
+            Vector3 pos = transform.position;
+            pos.y = MainScript.Player.PlayerBody.transform.position.y + 0.3f;
+            transform.position = pos;
+
     }
 
 }

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
+using Assets;
+using Assets.Scripts;
 
 public class MovingScript : MonoBehaviour
 {
@@ -16,7 +18,9 @@ public class MovingScript : MonoBehaviour
     AudioSource[] sounds;
     AudioSource flightSound;
     AudioSource explosionSound;
+    AudioSource alert;
     bool isColliding;
+    static bool wasPlayed = false;
     // Use this for initialization
     void Start()
     {
@@ -27,6 +31,7 @@ public class MovingScript : MonoBehaviour
         {
             explosionSound = sounds[0];
             flightSound = sounds[1];
+            alert = sounds[3];
             normalFlightSoundPitch = flightSound.pitch;
             minFlightSoundPitch = flightSound.pitch-0.2f;
             maxFlightSoundPitch = flightSound.pitch+1f;
@@ -37,6 +42,24 @@ public class MovingScript : MonoBehaviour
     void Update()
     {
         isColliding = false;
+
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 25f && wasPlayed == false)
+        {
+            alert.Play();
+            wasPlayed = true;
+        }
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel >= 25f && wasPlayed == true)
+        {
+            alert.Stop();
+            wasPlayed = false;
+        }
+
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 0f)
+        {
+            flightSound.Stop();
+            explosionSound.Play();
+            MainScript.KillPlayer();
+        }
     }
 
     // Update is called once per frame
@@ -56,8 +79,7 @@ public class MovingScript : MonoBehaviour
             {
                 MainScript.Player.PlayerBody.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Player/left", typeof(Sprite)) as Sprite;
             }
-            if (moveVec.x == 0)
-            {
+            if (moveVec.x == 0)            {
                 MainScript.Player.PlayerBody.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Player/normal", typeof(Sprite)) as Sprite;
             }
             if (speedVec.y > 0)

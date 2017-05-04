@@ -14,11 +14,12 @@ public class MainScript : MonoBehaviour
     public static List<Enemy> enemies;
     public static List<FuelTank> fuelTanks;
     public static bool Init = false;
+    public static bool start = true;
 
     static int flashingTime = 50;
     int flashingCounter;
     Color orgColor;
-
+    GameObject firstStart = null;
 
     void Start()
     {
@@ -33,6 +34,14 @@ public class MainScript : MonoBehaviour
         if (PlayerPrefs.HasKey("Lives")) Player.Lives = PlayerPrefs.GetInt("Lives");
         if (PlayerPrefs.HasKey("Score")) Player.Points = PlayerPrefs.GetInt("Score");
         if (PlayerPrefs.HasKey("Level")) Player.Level = PlayerPrefs.GetInt("Level");
+        if (Player.Points == 0 && Player.Lives == 3)
+        {
+            firstStart = GameObject.Instantiate(Resources.Load("Prefabs/PressStart", typeof(GameObject))) as GameObject;
+            firstStart.transform.position = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y + 0.17f);
+            Time.timeScale = 0;
+            AudioListener.pause = true;
+            start = true;
+        }
         AdjustLives();
     }
 
@@ -65,12 +74,20 @@ public class MainScript : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetButtonDown("Fire1") && start)
+        {
+            Destroy(firstStart);
+            Time.timeScale = 1;
+            AudioListener.pause = false;
+            start = false;
+        }
         if (Player.Destroyed)
         {
             if (Input.GetButtonDown("Fire1"))
             {
                 if (Player.Lives >= 0) ResetLevel();
-                else ResetGame();
+                else 
+                    ResetGame();
             }
         }
     }
@@ -87,12 +104,22 @@ public class MainScript : MonoBehaviour
         Player.Lives -= 1;
         var player = GameObject.Find("Player");
         player.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Explosions/playerExplosion", typeof(Sprite)) as Sprite;
-
+        if (Player.Lives >= 0)
+        {
+            GameObject presStart = GameObject.Instantiate(Resources.Load("Prefabs/PressStart", typeof(GameObject))) as GameObject;
+            presStart.transform.position = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y + 0.17f);
+        }
+        else
+        {
+            GameObject gameOver = GameObject.Instantiate(Resources.Load("Prefabs/GameOver", typeof(GameObject))) as GameObject;
+            gameOver.transform.position = new Vector2(Camera.main.transform.position.x, Camera.main.transform.position.y + 0.17f);
+        }
         //freeze all enemies
         foreach (Enemy e in enemies)
         {
             e.GameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
         }
+        
     }
 
     public static void KillEnemy(Enemy enemy)
