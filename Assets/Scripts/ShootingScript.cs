@@ -22,13 +22,13 @@ public class ShootingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire1") && shootCooldown <= 0) //for keyboard shooting
-        //if (Input.touchCount > 0 && shootCooldown <= 0 && !MainScript.Player.Destroyed)
+        //if(Input.GetButtonDown("Fire1") && shootCooldown <= 0) //for keyboard shooting
+        if (Input.touchCount > 0 && shootCooldown <= 0 && !MainScript.Player.Destroyed)
         {
-            //for (int i = 0; i < Input.touchCount; i++)
-            //{
-            //    var touchPos = Input.GetTouch(i).position;
-            //    if (Input.GetTouch(i).phase == TouchPhase.Began && (topLeft.Contains(touchPos) || topRight.Contains(touchPos) || bottomRight.Contains(touchPos)))
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                var touchPos = Input.GetTouch(i).position;
+                if (Input.GetTouch(i).phase == TouchPhase.Began && (topLeft.Contains(touchPos) || topRight.Contains(touchPos) || bottomRight.Contains(touchPos)))
                 {
                     NormalMissile nm = new NormalMissile(100);
                     shootCooldown = nm.CoolDown;
@@ -37,7 +37,7 @@ public class ShootingScript : MonoBehaviour
                      shot.Play();
                 }
 
-            //}
+            }
         }
     }
 

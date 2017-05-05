@@ -17,7 +17,7 @@ public class GroundLooperScript : MonoBehaviour
     int[] propabilityArray;
     GameObject bridge;
     System.Random random = new System.Random();
-
+    int color;
     // Use this for initialization
     void Start()
     {
@@ -42,7 +42,7 @@ public class GroundLooperScript : MonoBehaviour
         {
             nextLevel[i] = new int[2];
             currentLevel[i] = new int[2];
-            currentLevel[i][0] = 3;
+            currentLevel[i][0] = 4;
             currentLevel[i][1] = 0;
         }
         //for begining and ending of level
@@ -54,8 +54,11 @@ public class GroundLooperScript : MonoBehaviour
         currentLevel[31][1] = 0;
         if (Container.i.SavedLevel != 1)
         {
-            currentLevel= Container.i.ActualLevel.Select(a => a.ToArray()).ToArray();
+            currentLevel = Container.i.ActualLevel.Select(a => a.ToArray()).ToArray();
         }
+
+        if (MainScript.Player.Level % 2 != 0) color = 0;
+        else color = 1;
 
         drawCurrentLevel();
     }
@@ -242,7 +245,8 @@ public class GroundLooperScript : MonoBehaviour
                 MeshFilter trFilter = tr1.AddComponent<MeshFilter>();
                 MeshRenderer trRenderer = tr1.AddComponent<MeshRenderer>();
                 trRenderer.sortingLayerName = "Background";
-                trRenderer.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
+                if(color==0)trRenderer.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
+                else trRenderer.material = Resources.Load("Materials/DarkGrass", typeof(Material)) as Material;
                 Mesh trMesh = tr1.GetComponent<MeshFilter>().mesh;
                 trMesh.vertices = new Vector3[3] { new Vector3(t[0].x, t[0].y), new Vector3(t[1].x, t[1].y), new Vector3(t[2].x, t[2].y) };
                 trMesh.uv = new Vector2[3] { t[0], t[1], t[2] };
@@ -258,6 +262,8 @@ public class GroundLooperScript : MonoBehaviour
         {
             generateTerrain(MainScript.Player.Level);
             currentLevel = nextLevel.Select(a => a.ToArray()).ToArray();
+            if (color == 0) color = 1;
+            else color = 0;
         }
     }
 
@@ -287,7 +293,7 @@ public class GroundLooperScript : MonoBehaviour
         if ((lvl + 1) % 2 == 0)
         {
             //GENERATED LEVEL
-            
+
             //choosing number of islands for level
             islands = random.Next(0, 4);
 
@@ -295,7 +301,7 @@ public class GroundLooperScript : MonoBehaviour
             for (i = 2; i < nextLevel.Length - 1; i++)
             {
                 //ranbdomly starting island drawing
-                if (random.Next(0, 6) >= 3 && islandsdrawn < islands && i > 3 && !islandDrawing && islandCooldown==0)
+                if (random.Next(0, 6) >= 3 && islandsdrawn < islands && i > 3 && !islandDrawing && islandCooldown == 0)
                 {
                     islandDrawing = true;
                     islandsdrawn++;
@@ -320,7 +326,7 @@ public class GroundLooperScript : MonoBehaviour
                             nextLevel[i][1] = nextLevel[i - 1][1] + rand;
                         } while (nextLevel[i - 1][1] + rand < 1 || nextLevel[i - 1][1] + rand > 10);
                         currentIslandSize++;
-
+                        islandCooldown = 3;
                         if (i > nextLevel.Length - 3)
                         {
                             nextLevel[i][1] = 0;
@@ -333,7 +339,7 @@ public class GroundLooperScript : MonoBehaviour
                         {
                             islandDrawing = false;
                             currentIslandSize = 0;
-                            islandCooldown = 3;
+
                         }
 
                     }
@@ -343,7 +349,7 @@ public class GroundLooperScript : MonoBehaviour
                         {
                             islandDrawing = false;
                             currentIslandSize = 0;
-                            islandCooldown = 3;
+
                         }
                     }
                 }
@@ -364,7 +370,7 @@ public class GroundLooperScript : MonoBehaviour
                             nextLevel[i][0] = nextLevel[i - 1][0] + rand;
                             nextLevel[i][1] = 0;
                         } while (nextLevel[i - 1][0] + rand < 2 || nextLevel[i - 1][0] + rand > 7);
-                        if (islandCooldown >0)
+                        if (islandCooldown > 0)
                         {
                             islandCooldown--;
                         }
@@ -377,7 +383,7 @@ public class GroundLooperScript : MonoBehaviour
             //SIMPLE LEVEL
             for (i = 2; i < nextLevel.Length - 1; i++)
             {
-                nextLevel[i][0] = 3;
+                nextLevel[i][0] = 4;
                 nextLevel[i][1] = 0;
             }
         }
@@ -392,7 +398,8 @@ public class GroundLooperScript : MonoBehaviour
         SpriteRenderer r3 = grass.AddComponent<SpriteRenderer>();
         r3.sortingLayerName = "Background";
         r3.sprite = Resources.Load("Shapes/Square", typeof(Sprite)) as Sprite;
-        r3.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
+        if (color == 0) r3.material = Resources.Load("Materials/Grass", typeof(Material)) as Material;
+        else r3.material = Resources.Load("Materials/DarkGrass", typeof(Material)) as Material;
         BoxCollider2D c3 = grass.AddComponent<BoxCollider2D>();
         c3.isTrigger = true;
         grass.transform.position = new Vector2(posx, posy);
@@ -416,7 +423,7 @@ public class GroundLooperScript : MonoBehaviour
     private void generateEnemiesOrFuel(int[][] lvl, int current, float posx, float posy, float diffx)
     {
         //0.35f longest item size
-        int propability = 4; //propability of generate item
+        int propability = 3; //propability of generate item
         float x, y;
         int r, c;
         int diff1, diff2, diff;
@@ -491,6 +498,16 @@ public class GroundLooperScript : MonoBehaviour
             //chose what type of item should be spawned
             r = random.Next(0, 100);
             c = propabilityArray[r];
+            
+            //statement for preventing generating boats in tight corridors
+            if (lvl[current][1]>=9 && c == 0)
+            {
+                do
+                {
+                    r = random.Next(0, 100);
+                    c = propabilityArray[r];
+                } while (c == 0);
+            }
             switch (c)
             {
                 case (0):
@@ -551,7 +568,7 @@ public class GroundLooperScript : MonoBehaviour
     //CALL THIS AFTER BRIDGE DESTROYED
     public void NextLevel()
     {
-        Container.i.ActualLevel= currentLevel.Select(a => a.ToArray()).ToArray();
+        Container.i.ActualLevel = currentLevel.Select(a => a.ToArray()).ToArray();
         MainScript.Player.Level += 1;
         Container.i.SavedLevel = MainScript.Player.Level;
     }
