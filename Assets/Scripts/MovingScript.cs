@@ -28,7 +28,7 @@ public class MovingScript : MonoBehaviour
     {
         xMov = 0;
         maxXMov = 0.01f;
-        MaxSpeed = MainScript.Player.DefaultSpeed * 4;
+        MaxSpeed = MainScript.Player.DefaultSpeed * 2.5f;
         MinSpeed = MainScript.Player.DefaultSpeed / 1.4f; //TODO
         sounds = GetComponents<AudioSource>();
         if (sounds.Length > 0)
