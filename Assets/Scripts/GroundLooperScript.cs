@@ -512,19 +512,19 @@ public class GroundLooperScript : MonoBehaviour
             {
                 case (0):
                     {
-                        Boat boat = new Boat(100, x, y, -400);
+                        Boat boat = new Boat(100, x, y, -200);
                         break;
                     }
                 case (1):
                     {
-                        Helicopter helicopter = new Helicopter(100, x, y, 500);
+                        Helicopter helicopter = new Helicopter(100, x, y, 250);
                         break;
                     }
                 case (2):
                     {
                         int rSide = random.Next(-1, 2);
                         if (rSide == 0) rSide = -1;
-                        Airplane airplane = new Airplane(100, 1.90f * rSide, y, 900 * rSide * -1);
+                        Airplane airplane = new Airplane(100, 1.90f * rSide, y, 500 * rSide * -1);
                         break;
 
                     }

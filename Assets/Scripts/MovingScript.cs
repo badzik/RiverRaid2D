@@ -17,7 +17,9 @@ public class MovingScript : MonoBehaviour
     AudioSource[] sounds;
     AudioSource flightSound;
     AudioSource explosionSound;
+    AudioSource alert;
     bool isColliding;
+    static bool wasPlayed = false;
 
     float xMov;
     float maxXMov;
@@ -33,9 +35,10 @@ public class MovingScript : MonoBehaviour
         {
             explosionSound = sounds[0];
             flightSound = sounds[1];
+            alert = sounds[3];
             normalFlightSoundPitch = flightSound.pitch;
             minFlightSoundPitch = flightSound.pitch - 0.2f;
-            maxFlightSoundPitch = flightSound.pitch + 1f;
+            maxFlightSoundPitch = flightSound.pitch + 0.2f;
             flightSound.Play();
         }
     }
@@ -43,6 +46,25 @@ public class MovingScript : MonoBehaviour
     void Update()
     {
         isColliding = false;
+
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 25f && wasPlayed == false)
+        {
+            alert.Play();
+            wasPlayed = true;
+        }
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel >= 25f && wasPlayed == true)
+        {
+            alert.Stop();
+            wasPlayed = false;
+        }
+
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 0f)
+        {
+            flightSound.Stop();
+            alert.Stop();
+            explosionSound.Play();
+            MainScript.KillPlayer();
+        }
     }
 
     // Update is called once per frame

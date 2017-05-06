@@ -49,6 +49,14 @@ public class FuelTankScript : MonoBehaviour
                     restSound.Play();
                 }
             }
+            if(MainScript.Player.FuelLevel > 100)
+            {
+                if (!restSound.isPlaying)
+                {
+                    restSound.pitch = 1.08f;
+                    restSound.Play();
+                }
+            }
         }
         if((collider.tag == "Missile"))
         {
