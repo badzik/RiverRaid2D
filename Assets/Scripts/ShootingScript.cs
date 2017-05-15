@@ -23,7 +23,7 @@ public class ShootingScript : MonoBehaviour
     void Update()
     {
         //if(Input.GetButtonDown("Fire1") && shootCooldown <= 0) //for keyboard shooting
-        if (Input.touchCount > 0 && shootCooldown <= 0 && !MainScript.Player.Destroyed)
+        if (Input.touchCount > 0 && shootCooldown <= 0 && !MainScript.Player.Destroyed && !MainScript.start)
         {
             for (int i = 0; i < Input.touchCount; i++)
             {

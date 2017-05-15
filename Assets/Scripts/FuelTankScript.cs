@@ -22,7 +22,7 @@ public class FuelTankScript : MonoBehaviour
     {
         if ((Camera.main.transform.position.y - Camera.main.orthographicSize) > gameObject.transform.position.y)
         {
-            MainScript.enemies.Remove(MainScript.enemies.Find(x => x.GameObject.Equals(gameObject)));
+            MainScript.fuelTanks.Remove(MainScript.fuelTanks.Find(x => x.GameObject.Equals(gameObject)));
             Destroy(gameObject);
         }
     }
