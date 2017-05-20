@@ -15,6 +15,7 @@ public class MainScript : MonoBehaviour
     public static List<FuelTank> fuelTanks;
     public static bool Init = false;
     public static bool start = true;
+    Scene scene;
 
     static int flashingTime = 50;
     int flashingCounter;
@@ -23,6 +24,8 @@ public class MainScript : MonoBehaviour
 
     void Start()
     {
+        
+        scene = SceneManager.GetSceneByName("gameplay");
         flashingCounter = 0;
         orgColor = Camera.main.backgroundColor;
 
@@ -74,7 +77,8 @@ public class MainScript : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1") && start)
+      //  if (Input.GetButtonDown("Fire1") && start && !Application.isShowingSplashScreen) //keyboard
+      if(Input.touchCount > 0  && start && !Application.isShowingSplashScreen && !MainScript.Player.Destroyed)
         {
             Destroy(firstStart);
             Time.timeScale = 1;
@@ -83,7 +87,7 @@ public class MainScript : MonoBehaviour
         }
         if (Player.Destroyed)
         {
-            if (Input.GetButtonDown("Fire1"))
+            if (Input.touchCount > 0)
             {
                 if (Player.Lives >= 0) ResetLevel();
                 else 

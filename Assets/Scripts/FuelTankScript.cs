@@ -6,7 +6,7 @@ public class FuelTankScript : MonoBehaviour
 {
     AudioSource[] fuelSound;
     AudioSource startSound;
-    AudioSource restSound;
+    AudioSource fullSound;
     float refuelingSpeed = 0.25f;
     int score = 80;
     // Use this for initialization
@@ -14,7 +14,7 @@ public class FuelTankScript : MonoBehaviour
     {
         fuelSound = GetComponents<AudioSource>();
         startSound = fuelSound[0];
-        restSound = fuelSound[1];
+        fullSound = fuelSound[1];
     }
 
     // Update is called once per frame
@@ -22,21 +22,11 @@ public class FuelTankScript : MonoBehaviour
     {
         if ((Camera.main.transform.position.y - Camera.main.orthographicSize) > gameObject.transform.position.y)
         {
-            MainScript.fuelTanks.Remove(MainScript.fuelTanks.Find(x => x.GameObject.Equals(gameObject)));
+            MainScript.enemies.Remove(MainScript.enemies.Find(x => x.GameObject.Equals(gameObject)));
             Destroy(gameObject);
         }
     }
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Player")
-        {
-            if(MainScript.Player.FuelLevel < 100)
-            {
-                MainScript.Player.FuelLevel += refuelingSpeed;
-                startSound.Play();
-            }
-        }
-    }
+
     void OnTriggerStay2D(Collider2D collider)
     {
         if (collider.tag == "Player")
@@ -44,21 +34,22 @@ public class FuelTankScript : MonoBehaviour
             if (MainScript.Player.FuelLevel < 100)
             {
                 MainScript.Player.FuelLevel += refuelingSpeed;
-                if (!restSound.isPlaying && !startSound.isPlaying)
+                if (!startSound.isPlaying && !MainScript.Player.Destroyed)
                 {
-                    restSound.Play();
+                    startSound.Play();
                 }
             }
-            if(MainScript.Player.FuelLevel > 100)
+            if (MainScript.Player.FuelLevel >= 100)
             {
-                if (!restSound.isPlaying)
+                MainScript.Player.FuelLevel = 101;
+                if (!fullSound.isPlaying && !MainScript.Player.Destroyed)
                 {
-                    restSound.pitch = 1.08f;
-                    restSound.Play();
+                    fullSound.pitch = 1.08f;
+                    fullSound.Play();
                 }
             }
         }
-        if((collider.tag == "Missile"))
+        if ((collider.tag == "Missile"))
         {
             FuelTank fuelTank = MainScript.fuelTanks.Find(x => x.GameObject.Equals(gameObject));
             Missile missile = MainScript.missiles.Find(x => x.GameObject.Equals(collider.gameObject));

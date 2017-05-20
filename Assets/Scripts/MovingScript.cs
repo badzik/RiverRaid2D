@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MovingScript : MonoBehaviour
 {
@@ -46,13 +47,13 @@ public class MovingScript : MonoBehaviour
     void Update()
     {
         isColliding = false;
-
-        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 25f && wasPlayed == false)
+        
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel <= 25f && wasPlayed == false && SceneManager.GetActiveScene().isLoaded)
         {
             alert.Play();
             wasPlayed = true;
         }
-        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel >= 25f && wasPlayed == true)
+        if (!MainScript.Player.Destroyed && MainScript.Player.FuelLevel >= 25f && wasPlayed == true && SceneManager.GetActiveScene().isLoaded)
         {
             alert.Stop();
             wasPlayed = false;
