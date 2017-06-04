@@ -309,7 +309,7 @@ public class GroundLooperScript : MonoBehaviour
                 }
 
                 //if statement that based on islandDrawing variable draws area with island or without
-                if (islandDrawing && i < nextLevel.Length - 3)
+                if (islandDrawing && i < nextLevel.Length - 4)
                 {
                     if (islandBegin > 0)
                     {
