@@ -31,8 +31,8 @@ public class MovingScript : MonoBehaviour
     {
         xMov = 0;
         maxXMov = 0.01f;
-        MaxSpeed = MainScript.Player.DefaultSpeed * 2.5f;
-        MinSpeed = MainScript.Player.DefaultSpeed / 1.4f; //TODO
+        MaxSpeed = MainScript.Player.DefaultSpeed * 1.7f;
+        MinSpeed = MainScript.Player.DefaultSpeed / 1.3f;
         sounds = GetComponents<AudioSource>();
         if (sounds.Length > 0)
         {
@@ -81,7 +81,7 @@ public class MovingScript : MonoBehaviour
             leftJoystickInput = leftJoystick.GetInputDirection();
 
 
-            speedDelta = speedVec.y / 10000.0f;
+            speedDelta = speedVec.y / 1000.0f;
             if (moveVec.x > 0)
             {
                 MainScript.Player.PlayerBody.GetComponent<SpriteRenderer>().sprite = Resources.Load("Sprites/Player/right", typeof(Sprite)) as Sprite;
@@ -120,7 +120,7 @@ public class MovingScript : MonoBehaviour
             }
             if (speedVec.y == 0.0f)
             {
-                speedDelta = 0.9f / 10000.0f;
+                speedDelta = 1.5f / 10000.0f;
                 if (MainScript.Player.DefaultSpeed <= MainScript.Player.ActualSpeed)
                 {
                     MainScript.Player.ActualSpeed -= speedDelta;
@@ -133,9 +133,7 @@ public class MovingScript : MonoBehaviour
                 }
             }
             MainScript.Player.UpdateBoxCollider();
-            //MainScript.Player.PlayerBody.AddForce(moveVec);
             MainScript.Player.PlayerBody.transform.position = new Vector3(MainScript.Player.PlayerBody.transform.position.x + xMov, MainScript.Player.PlayerBody.transform.position.y + MainScript.Player.ActualSpeed);
-            //if (moveVec == Vector2.zero) MainScript.Player.PlayerBody.velocity = Vector2.zero;
             if (moveVec == Vector2.zero) xMov = 0.0f;
         }
     }

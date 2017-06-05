@@ -22,7 +22,7 @@ namespace Assets
             this.playerBody = playerBody;
             fuelLevel = 100;
             lives = 3;
-            defaultSpeed = 0.004f;
+            defaultSpeed = 0.008f;
             actualSpeed = defaultSpeed;
             destroyed = false;
             points = 0;

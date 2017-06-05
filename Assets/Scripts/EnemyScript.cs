@@ -18,7 +18,7 @@ public class EnemyScript : MonoBehaviour
         var enemy = MainScript.enemies.Find(x => x.GameObject == gameObject);
         if (((Camera.main.transform.position.y + (Camera.main.orthographicSize) / 1.5) > gameObject.transform.position.y) && probability >= 50 && MainScript.Player.Level !=1)
         {
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.Speed * MainScript.Player.DefaultSpeed, 0);
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(enemy.Speed * (MainScript.Player.DefaultSpeed/2), 0);
             if(gameObject.name == "AirPlanePrefab(Clone)")
             {
                 int rotation = (enemy.Speed > 0) ? 180 : 360;
@@ -38,7 +38,7 @@ public class EnemyScript : MonoBehaviour
         {
             int rotation = 180;
             var enemySpeed = MainScript.enemies.Find(x => x.GameObject.Equals(gameObject)).Speed *= -1;
-            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(enemySpeed * MainScript.Player.DefaultSpeed, 0);
+            gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(enemySpeed * (MainScript.Player.DefaultSpeed/2), 0);
             if (enemySpeed < 0 && gameObject.name == "BoatPrefab(Clone)")
             {
                     rotation += rotation;

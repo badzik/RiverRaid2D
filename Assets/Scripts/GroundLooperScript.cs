@@ -330,6 +330,7 @@ public class GroundLooperScript : MonoBehaviour
                         if (i > nextLevel.Length - 3)
                         {
                             nextLevel[i][1] = 0;
+                            if (nextLevel[i - 1][1] != 0) nextLevel[i - 1][1] = random.Next(0, 0);
                         }
                     }
 
@@ -339,7 +340,7 @@ public class GroundLooperScript : MonoBehaviour
                         {
                             islandDrawing = false;
                             currentIslandSize = 0;
-
+                            if (nextLevel[i - 1][1] != 0) nextLevel[i - 1][1] = random.Next(1, 3);
                         }
 
                     }
@@ -349,6 +350,7 @@ public class GroundLooperScript : MonoBehaviour
                         {
                             islandDrawing = false;
                             currentIslandSize = 0;
+                            if (nextLevel[i - 1][1] != 0) nextLevel[i - 1][1] = random.Next(1, 3);
 
                         }
                     }
